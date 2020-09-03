@@ -17,7 +17,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.citi.module.controller.CitiController;
-import com.citi.module.service.CitiService;
+import com.citi.module.service.CitiServiceImpl;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringBootTest
@@ -29,10 +29,10 @@ public class CityApplicationTests {
 	private CitiController citiController;
 	
 	@Autowired
-	CitiService citiService;
+	CitiServiceImpl citiService;
 	
 	@Mock
-	CitiService mockCitiService;
+	CitiServiceImpl mockCitiService;
 	
 	
 	@Before
@@ -42,7 +42,7 @@ public class CityApplicationTests {
 	
 	@Test
 	public void testCitiController() throws Exception {
-		when(mockCitiService.getCitiDetails("Boston", "New York")).thenReturn("Yes");
+		when(mockCitiService.verifyCitiesConnected("Boston", "New York")).thenReturn("Yes");
 		
 		mockMvc.perform(MockMvcRequestBuilders.get("/connected")
 				.param("origin", "Boston")
@@ -55,36 +55,31 @@ public class CityApplicationTests {
 	
 	@Test
 	public void getCitiNameTest() {
-		String connected = citiService.getCitiDetails("Boston", "New York");
+		String connected = citiService.verifyCitiesConnected("Boston", "New York");
 		assertEquals(connected, "Yes");
 	}
 	
 	@Test
 	public void getCitiNameNotPresent1Test() {
-		String connected = citiService.getCitiDetails("Boston", "Boston");
+		String connected = citiService.verifyCitiesConnected("Boston", "Boston");
 		assertEquals(connected, "Yes");
 	}
 	@Test
 	public void getCitiNameNotPresent2Test() {
-		String connected = citiService.getCitiDetails("New York", "New York");
+		String connected = citiService.verifyCitiesConnected("New York", "New York");
 		assertEquals(connected, "Yes");
 	}
 	@Test
 	public void getCitiNameNotPresent3Test() {
-		String connected = citiService.getCitiDetails("AA", "BB");
+		String connected = citiService.verifyCitiesConnected("AA", "BB");
 		assertEquals(connected, "No");
 	}
 	
 	@Test
 	public void getCitiNameNotPresent4Test() {
-		String connected = citiService.getCitiDetails("New York", "XXX");
+		String connected = citiService.verifyCitiesConnected("New York", "XXX");
 		assertEquals(connected, "No");
 	}
 	
-	@Test(expected = Exception.class)
-	public void getCitiNameExceptionTest() {
-		String connected = citiService.getCitiDetails("New York", "XXX");
-		assertEquals(connected, "No");
-	}
 
 }
